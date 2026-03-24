@@ -19,62 +19,67 @@ export default function WriteTopicPage() {
   }
 
   return (
-    <div style={s.page}>
+    <div style={s.wrapper}>
+      {/* Back button always top left */}
       <div style={s.back} onClick={() => router.push('/dashboard')}>← Back to Topics</div>
 
-      <h1 style={s.title}>Write Your Own Topic</h1>
-      <p style={s.sub}>Enter the article title and primary keyword to get started.</p>
+      {/* Centered content */}
+      <div style={s.page}>
+        <h1 style={s.title}>Write Your Own Topic</h1>
+        <p style={s.sub}>Enter the article title and primary keyword to get started.</p>
 
-      <div style={s.card}>
-        <form onSubmit={handleContinue} style={s.form}>
-          <div style={s.field}>
-            <label style={s.label}>Article Title <span style={s.req}>*</span></label>
-            <input
-              type="text"
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              placeholder="e.g. Best High-Yield Savings Accounts in 2025"
-              required
-              style={s.input}
-              autoFocus
-            />
-          </div>
-          <div style={s.field}>
-            <label style={s.label}>Primary Keyword</label>
-            <input
-              type="text"
-              value={keyword}
-              onChange={e => setKeyword(e.target.value)}
-              placeholder="e.g. high yield savings account"
-              style={s.input}
-            />
-            <span style={s.hint}>You can also set this on the next page</span>
-          </div>
-          <div style={s.actions}>
-            <button type="button" style={s.cancelBtn} onClick={() => router.push('/dashboard')}>
-              Cancel
-            </button>
-            <button type="submit" style={s.continueBtn} disabled={!title.trim()}>
-              Continue to Content Specs →
-            </button>
-          </div>
-        </form>
-      </div>
+        <div style={s.card}>
+          <form onSubmit={handleContinue} style={s.form}>
+            <div style={s.field}>
+              <label style={s.label}>Article Title <span style={s.req}>*</span></label>
+              <input
+                type="text"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                placeholder="e.g. Best High-Yield Savings Accounts in 2025"
+                required
+                style={s.input}
+                autoFocus
+              />
+            </div>
+            <div style={s.field}>
+              <label style={s.label}>Primary Keyword</label>
+              <input
+                type="text"
+                value={keyword}
+                onChange={e => setKeyword(e.target.value)}
+                placeholder="e.g. high yield savings account"
+                style={s.input}
+              />
+              <span style={s.hint}>You can also set this on the next page</span>
+            </div>
+            <div style={s.actions}>
+              <button type="button" style={s.cancelBtn} onClick={() => router.push('/dashboard')}>
+                Cancel
+              </button>
+              <button type="submit" style={s.continueBtn} disabled={!title.trim()}>
+                Continue to Content Specs →
+              </button>
+            </div>
+          </form>
+        </div>
 
-      {/* Tip */}
-      <div style={s.tip}>
-        <span style={s.tipIcon}>💡</span>
-        <span style={s.tipText}>
-          Not sure what to write? Go back and pick a trending topic from our RSS feed instead.
-        </span>
+        {/* Tip */}
+        <div style={s.tip}>
+          <span style={s.tipIcon}>💡</span>
+          <span style={s.tipText}>
+            Not sure what to write? Go back and pick a trending topic from our RSS feed instead.
+          </span>
+        </div>
       </div>
     </div>
   )
 }
 
 const s: Record<string, React.CSSProperties> = {
-  page: { padding: '36px 40px', maxWidth: '640px' },
-  back: { fontSize: '13px', color: '#6b7280', cursor: 'pointer', marginBottom: '28px', display: 'inline-flex', alignItems: 'center', gap: '4px' },
+  wrapper: { position: 'relative', minHeight: '100vh', background: '#f4f6fb' },
+  back: { position: 'absolute', top: '24px', left: '32px', fontSize: '13px', color: '#6b7280', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: 500 },
+  page: { maxWidth: '640px', margin: '0 auto', padding: '36px 40px', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' },
   title: { fontSize: '32px', fontWeight: 700, color: '#1a1f36', marginBottom: '6px' },
   sub: { fontSize: '14px', color: '#6b7280', marginBottom: '32px' },
   card: { background: '#fff', border: '1px solid #e2e6f0', borderRadius: '12px', padding: '36px' },

@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
         'Authorization': `Bearer ${process.env.CEREBRAS_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b',
+        model: 'qwen-3-235b-a22b-instruct-2507',
         max_tokens: 8192,
         messages: [
           {
