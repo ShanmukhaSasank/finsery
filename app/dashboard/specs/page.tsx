@@ -10,6 +10,7 @@ const STEPS = ['Core Details', 'Content Strategy', 'Content Extras', 'References
 export default function SpecsPage() {
   const router = useRouter()
   const [step, setStep] = useState(0)
+  const [generatingAngle, setGeneratingAngle] = useState(false)
   const [form, setForm] = useState({
     title: '', primary_keyword: '', intent: '', angle: '',
     finsery_pro_tip: 'no', content_specification: '',
@@ -40,6 +41,21 @@ export default function SpecsPage() {
   }
 
   function removeTag(t: string) { set('tags', form.tags.filter(x => x !== t)) }
+
+  async function generateAngle() {
+    if (!form.title) return
+    setGeneratingAngle(true)
+    try {
+      const res = await fetch('/api/suggest-angle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: form.title, intent: form.intent, primary_keyword: form.primary_keyword }),
+      })
+      const data = await res.json()
+      if (data.angle) set('angle', data.angle)
+    } catch (e) {}
+    setGeneratingAngle(false)
+  }
 
   function validateStep(s: number): Record<string, string> {
     const e: Record<string, string> = {}
@@ -181,8 +197,14 @@ export default function SpecsPage() {
               </div>
               <div style={s.field}>
                 <label style={s.label}>Angle <span style={s.req}>*</span></label>
-                <input value={form.angle} onChange={e => set('angle', e.target.value)} style={{ ...s.input, ...(errors.angle ? s.inputErr : {}) }} placeholder="e.g. Step-by-step guide for first-time investors" />
+                <div style={s.angleWrap}>
+                  <input value={form.angle} onChange={e => set('angle', e.target.value)} style={{ ...s.input, ...s.angleInput, ...(errors.angle ? s.inputErr : {}) }} placeholder="e.g. Step-by-step guide for first-time investors" />
+                  <button type="button" style={{ ...s.angleBtn, ...(generatingAngle ? s.angleBtnLoading : {}) }} onClick={generateAngle} disabled={generatingAngle || !form.title} title={!form.title ? 'Set a title first' : 'Generate angle with AI'}>
+                    {generatingAngle ? '⏳' : '✨ AI'}
+                  </button>
+                </div>
                 {errors.angle && <span style={s.errMsg}>{errors.angle}</span>}
+                <span style={s.hint}>Click ✨ AI to auto-generate based on your title and intent</span>
               </div>
               <div style={s.grid2}>
                 <div style={s.field}>
@@ -317,4 +339,8 @@ const s: Record<string, React.CSSProperties> = {
   nextBtn: { background: '#4557A1', color: '#fff', border: 'none', borderRadius: '8px', padding: '10px 24px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' },
   generateBtn: { background: '#4557A1', color: '#fff', border: 'none', borderRadius: '8px', padding: '10px 28px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' },
   stepCount: { fontSize: '13px', color: '#9ca3af', fontWeight: 500 },
+  angleWrap: { display: 'flex', gap: '8px', alignItems: 'center' },
+  angleInput: { flex: 1 },
+  angleBtn: { background: 'rgba(69,87,161,0.08)', border: '1.5px solid rgba(69,87,161,0.25)', borderRadius: '8px', padding: '11px 14px', fontSize: '13px', fontWeight: 700, color: '#4557A1', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0, transition: 'all 0.15s' },
+  angleBtnLoading: { opacity: 0.6, cursor: 'not-allowed' },
 }
